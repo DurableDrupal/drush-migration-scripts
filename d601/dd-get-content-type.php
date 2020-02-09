@@ -34,8 +34,6 @@
 /**
  * Config
  */
-// servidor de contenidos
-define("SCS", "http://durabledrupal.net:4063");
 
 /**
  * Content types map
@@ -171,7 +169,7 @@ function migrate_nodes($drupal_content_type, $scs_content_type) {
     $num++;
     $node = node_load($obj->nid);
     $json = drupal_to_js($node);
-    $url = SCS . '/' . $scs_content_type;
+    $url = variable_get('backend_url', null) . '/' . $scs_content_type;
     $metodo = 'POST';
     $reqresult = drupal_http_request ( 
       $url, 
@@ -212,7 +210,7 @@ function migrate_tids() {
 /* D6
  * drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3, $timeout = 30.0)
  */
-      $url = SCS . '/taxonomy';
+      $url = variable_get('backend_url', null) . '/taxonomy';
       $metodo = 'POST';
       $result = drupal_http_request ( 
         $url, 
@@ -255,7 +253,7 @@ function migrate_vocabs() {
  * 7.x common.inc    drupal_http_request($url, array $options = array())
  *
     // set up url
-    $url = SCS . '/vocabulary';
+    $url = variable_get('backend_url', null) . '/vocabulary';
     $metodo = 'POST';
     // set up options and send request to JSON api on SCS
     $options = array (
@@ -274,7 +272,7 @@ function migrate_vocabs() {
  * drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3, $timeout = 30.0)
  *
  */
-    $url = SCS . '/vocabulary';
+    $url = variable_get('backend_url', null) . '/vocabulary';
     $metodo = 'POST';
     $result = drupal_http_request ( 
       $url, 

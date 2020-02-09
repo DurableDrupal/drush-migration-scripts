@@ -40,8 +40,6 @@
 /**
  * Config
  */
-// servidor de contenidos
-define("SCS", "http://durabledrupal.net:4064");
 
 // map contant types on SCS to legacy content types
   // if no matching legacy content type, create it thusly:
@@ -456,7 +454,7 @@ function upsert_asset($n) {
   $json = json_encode($asset);
 
   // set up url
-  $url = SCS . '/api/assets';
+  $url = variable_get('backend_url', null) . '/api/assets';
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
@@ -863,7 +861,7 @@ function upsert($item, $api) {
   $json = json_encode($item);
   // print $json . "\n";
   // set up url
-  $url = SCS . '/api/' . $api;
+  $url = variable_get('backend_url', null) . '/api/' . $api;
   $method = 'PUT';
   // set up options and send request to JSON api on SCS
 

@@ -50,8 +50,7 @@
 /**
  * Config
  */
-// servidor de contenidos
-define("SCS", "http://awebfactory.org:4004/");
+// Structured content server target - settings in Drupal settings file
 
 // map target contant types on SCS to legacy source content types
   // if no matching legacy content type, create it thusly:
@@ -461,7 +460,7 @@ function upsert_asset($n) {
   $json = json_encode($asset);
 
   // set up url
-  $url = SCS . '/api/assets';
+  $url = variable_get('backend_url', null) . '/api/assets';
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
@@ -882,7 +881,7 @@ function process($item, $api) {
   switch ($process_option) {
     case 'upsert':
       // set up url
-      $url = SCS . $api;
+      $url = variable_get('backend_url', null) . $api;
 
       // set up options and send request to JSON api on SCS
       $method = 'POST';

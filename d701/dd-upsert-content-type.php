@@ -40,8 +40,6 @@
 /**
  * Config
  */
-// servidor de contenidos
-define("SCS", "http://awebfactory.org:4021");
 
 // map contant types on SCS to legacy content types
   // if no matching legacy content type, create it thusly:
@@ -142,7 +140,7 @@ function upsert_artist($n) {
   // print $json;
 
   // set up url
-  $url = SCS . '/api/artists';
+  $url = variable_get('backend_url', null) . '/api/artists';
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
@@ -186,7 +184,7 @@ function upsert_video($n) {
   //print $json;
 
   // set up url
-  $url = SCS . '/api/videos';
+  $url = variable_get('backend_url', null) . '/api/videos';
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
@@ -219,7 +217,7 @@ function upsert_asset($n) {
   $json = json_encode($asset);
 
   // set up url
-  $url = SCS . '/api/assets';
+  $url = variable_get('backend_url', null) . '/api/assets';
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
