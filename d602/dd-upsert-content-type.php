@@ -111,13 +111,20 @@ function process_tag($term) {
   // print_r($tag);
   $vname = __get_vname($term->vid);
   $tag = array(
-    "idLegacy" => $term->tid,
-    "tagName" => $term->name,
     "tagSlug" => __slugify($term->name),
+    "tagName" => $term->name,
     "tagDescription" => $term->description,
-    "vocabIdLegacy" => $term->vid,
-    "vocabName" => $vname,
     "vocabSlug" => __slugify($vname),
+    "vocabName" => $vname,
+    "legacyTag" => array(
+      "tagId" => $term->tid,
+      "tagSlug" => __slugify($term->name),
+      "tagName" => $term->name,
+      "tagDescription" => $term->description,
+      "vocabId" => $term->vid,
+      "vocabSlug" => __slugify($vname),
+      "vocabName" => $vname,
+    )
   );
   process($tag, "tags"); 
 }
@@ -461,12 +468,14 @@ function upsert_asset($n) {
 
   // set up url
   $url = variable_get('backend_url', null) . '/api/assets';
+  $jwt = 'Bearer ' . variable_get('backend_jwt', null);
   $metodo = 'PUT';
   // set up options and send request to JSON api on SCS
   $options = array (
     'method' => $metodo,
     'headers' => array (
         'Content-Type' => 'application/json',
+        'Authorization' =>  $jwt,
     ),
     'data' => $json,
   );
@@ -862,6 +871,9 @@ function process($item, $api) {
   // get process mode
   $args = drush_get_arguments();
   $process_option = $args[3];
+  // get content types
+  $drupal_content_type = $args[2];
+  $scs_content_type = $content_types[$drupal_content_type];
 
   // encode as JSON
   // D7
@@ -881,13 +893,19 @@ function process($item, $api) {
   switch ($process_option) {
     case 'upsert':
       // set up url
-      $url = variable_get('backend_url', null) . $api;
+      $url = variable_get('backend_url', null) . '/' . $api;
+      // print('url: ' . $url . "\n");
+      $jwt = 'Bearer ' . variable_get('backend_jwt', null);
+      // print('jwt: ' . $jwt . "\n");
 
       // set up options and send request to JSON api on SCS
       $method = 'POST';
       $result = drupal_http_request ( 
         $url, 
-        array ( 'Content-Type' => 'application/json'),
+        array ( 
+          'Content-Type' => 'application/json',
+          'Authorization' =>  $jwt
+        ),
         $method,
         $json,
         3,
@@ -896,9 +914,10 @@ function process($item, $api) {
 
       // inform of success or failure
       if ($result->code != 200) {
-        print ($result->status_message);
-        print_r($item, false);
-        print $json . "\n";
+        print_r($result, false);
+        // print ($result->status_message);
+        // print_r($item, false);
+        // print $json . "\n";
       } else {
         print "legacy content type: " . $drupal_content_type . ' targeting ' . $scs_content_type . " " . $result->code . " on Structured Content Server\n\n";
       }
